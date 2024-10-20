@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blocked Emails - Stinky Phishing Detector</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar {
+            background-color: #800000; /* Maroon color */
+            padding: 15px;
+            color: white;
+            width: 220px; /* Increased width for balance */
+            border-radius: 8px 0 0 8px;
+            height: calc(100vh - 40px); /* Full height minus padding */
+            position: fixed; /* Fixes the sidebar to the left */
+            text-align: center; /* Center the text in the sidebar */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items horizontally */
+            justify-content: flex-start; /* Align items to the top */
+        }
+        .sidebar img {
+            width: 100px; /* Enlarged logo size */
+            height: 100px; /* Enlarged logo size */
+            border-radius: 50%; /* Make logo circular */
+            margin-bottom: 15px; /* Space below the logo */
+            margin-top: 20px; /* Space above the logo */
+        }
+        .sidebar h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%; /* Make the list full width */
+        }
+        .sidebar ul li {
+            margin: 15px 0; /* Adjusted margin for balance */
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+            display: flex; /* Flexbox for icons and text */
+            align-items: center; /* Center vertically */
+            justify-content: flex-start; /* Align text to the start */
+            padding: 15px; /* Increased padding for larger button */
+            border-radius: 5px; /* Rounded corners */
+            width: 100%; /* Full width for the link */
+            font-size: 1.1em; /* Increased font size */
+        }
+        .sidebar ul li a i {
+            margin-right: 10px; /* Space between icon and text */
+        }
+        .sidebar ul li a:hover {
+            color: #ffd700; /* Gold color on hover */
+            background-color: rgba(255, 255, 255, 0.1); /* Light background on hover */
+        }
+        .main-content {
+            margin-left: 240px; /* Leave space for sidebar */
+            padding: 20px;
+            flex: 1;
+        }
+        h1 {
+            color: #800000; /* Maroon color */
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden; /* Rounded corners for the table */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #800000; /* Maroon color for header */
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* Light gray for even rows */
+        }
+        tr:hover {
+            background-color: #ffd700; /* Gold color on hover */
+            color: #333; /* Dark text on hover */
+        }
+        .unblock-btn {
+            background-color: #dc3545; /* Red background */
+            color: white; /* White text */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 8px 12px; /* Padding */
+            cursor: pointer; /* Pointer cursor on hover */
+        }
+        .unblock-btn:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%; /* Sidebar full width on smaller screens */
+                height: auto; /* Auto height */
+            }
+            .main-content {
+                margin-left: 0; /* No margin on smaller screens */
+            }
+        }
+    </style>
+    <script>
+        // Function to load blocked URLs from local storage
+        window.onload = function() {
+            let blockedUrls = JSON.parse(localStorage.getItem('blockedUrls')) || [];
+            let tableBody = document.getElementById('blocked-urls');
+
+            // Populate the table with blocked URLs
+            blockedUrls.forEach(url => {
+                let row = tableBody.insertRow();
+                let cell1 = row.insertCell(0);
+                let cell2 = row.insertCell(1);
+                cell1.textContent = url;
+                cell2.innerHTML = '<button class="unblock-btn" onclick="unblockUrl(\'' + url + '\')">Unblock</button>';
+            });
+        };
+
+        // Function to unblock a URL
+        function unblockUrl(url) {
+            let blockedUrls = JSON.parse(localStorage.getItem('blockedUrls')) || [];
+            blockedUrls = blockedUrls.filter(item => item !== url);
+            localStorage.setItem('blockedUrls', JSON.stringify(blockedUrls));
+            alert(url + " has been removed from the blocklist!");
+            location.reload(); // Reload the page to update the list
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <img src="logo.jpeg" alt="Stinky Logo">
+            <h2>Stinky</h2>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="history.html"><i class="fas fa-history"></i> History</a></li>
+                <li><a href="blocked.html"><i class="fas fa-ban"></i> Blocked</a></li>
+                <li><a href="about us.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <h1>Blocked URLs</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>URL</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="blocked-urls">
+                    <!-- Blocked URLs will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
